@@ -1,0 +1,14 @@
+[Unit]
+Description=SentinelOps Security and System Monitoring Agent
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/mnt/p/Linux_Prj/sentinelops
+ExecStart=/mnt/p/Linux_Prj/sentinelops/.venv/bin/python -u -m app.runner
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

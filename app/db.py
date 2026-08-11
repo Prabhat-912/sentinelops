@@ -17,6 +17,7 @@ def initialize_database():
 
     cursor = connection.cursor()
 
+    # Store system metrics
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS metrics (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,6 +25,17 @@ def initialize_database():
             cpu_percent REAL NOT NULL,
             memory_percent REAL NOT NULL,
             disk_percent REAL NOT NULL
+        )
+    """)
+
+    # Store detected events/alerts
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS events (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp TEXT NOT NULL,
+            event_type TEXT NOT NULL,
+            severity TEXT NOT NULL,
+            message TEXT NOT NULL
         )
     """)
 
