@@ -1,0 +1,16 @@
+monitoring:
+  interval: 10
+  cpu_threshold: 80
+  memory_threshold: 80
+  disk_threshold: 80
+
+database:
+  path: "sentinelops.db"
+
+security:
+  auth_log: "/var/log/auth.log"
+  failed_login_threshold: 5
+  failed_login_window: 60
+
+alerting:
+  cooldown: 180
