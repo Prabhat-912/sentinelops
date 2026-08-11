@@ -5,7 +5,7 @@ monitoring:
   disk_threshold: 80
 
 database:
-  path: "sentinelops.db"
+  path: "data/sentinelops.db"
 
 security:
   auth_log: "/var/log/auth.log"
