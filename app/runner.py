@@ -10,6 +10,7 @@ from app.security import (
     save_security_events,
 )
 from app.config import config
+from app.alerting import send_email_alert
 
 
 def run_security_checks():
@@ -36,6 +37,11 @@ def run_security_checks():
                 f"{alert['event_type']} - "
                 f"{alert['message']}"
             )
+
+            try:
+                send_email_alert(alert)
+            except Exception as exc:
+                print(f"[ERROR] Failed to send email alert: {exc}")
     else:
         print("[OK] No suspicious login activity detected")
 
@@ -60,6 +66,11 @@ def run_monitoring_checks():
                 f"{event['event_type']} - "
                 f"{event['message']}"
             )
+
+            try:
+                send_email_alert(event)
+            except Exception as exc:
+                print(f"[ERROR] Failed to send email alert: {exc}")
 
 
 def main():
