@@ -11,6 +11,11 @@ from app.security import (
 )
 from app.config import config
 from app.alerting import send_email_alert
+from app.prometheus_metrics import (
+    update_system_metrics,
+    record_security_alert,
+    record_email_alert,
+)
 
 
 def run_security_checks():
@@ -32,6 +37,7 @@ def run_security_checks():
         save_security_events(alerts)
 
         for alert in alerts:
+            record_security_alert()
             print(
                 f"[ALERT] {alert['severity']} - "
                 f"{alert['event_type']} - "
@@ -39,7 +45,8 @@ def run_security_checks():
             )
 
             try:
-                send_email_alert(alert)
+                if send_email_alert(alert):
+                    record_email_alert()
             except Exception as exc:
                 print(f"[ERROR] Failed to send email alert: {exc}")
     else:
@@ -48,6 +55,7 @@ def run_security_checks():
 
 def run_monitoring_checks():
     metrics = collect_metrics()
+    update_system_metrics(metrics)
 
     print(
         f"[METRICS] CPU={metrics['cpu_percent']}% "
@@ -68,7 +76,8 @@ def run_monitoring_checks():
             )
 
             try:
-                send_email_alert(event)
+                if send_email_alert(event):
+                    record_email_alert()
             except Exception as exc:
                 print(f"[ERROR] Failed to send email alert: {exc}")
 

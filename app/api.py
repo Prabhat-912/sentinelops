@@ -1,8 +1,20 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 
 from app.db import get_connection
+from app.prometheus_metrics import update_metrics_from_database
 
 app = Flask(__name__)
+
+@app.route("/prometheus", methods=["GET"])
+def prometheus():
+    update_metrics_from_database()
+
+    return Response(
+        generate_latest(),
+        mimetype=CONTENT_TYPE_LATEST,
+    )
+
 
 
 @app.route("/health", methods=["GET"])
