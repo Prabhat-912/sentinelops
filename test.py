@@ -1,4 +1,22 @@
+import os
+from pathlib import Path
+
 from app.alerting import send_email_alert
+
+
+ENV_FILE = Path(".env")
+
+if ENV_FILE.exists():
+    with ENV_FILE.open() as f:
+        for line in f:
+            line = line.strip()
+
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+
+            key, value = line.split("=", 1)
+            os.environ[key]=value
+
 
 test_alert = {
     "event_type": "TEST_ALERT",
