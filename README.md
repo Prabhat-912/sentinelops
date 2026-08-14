@@ -461,6 +461,28 @@ This test exercises the actual SentinelOps suspicious-login detection, SQLite ev
 
 Actual production security alerts are generated automatically by `sentinelops.service`.
 
+## Screenshots
+
+### Grafana Dashboard
+
+![SentinelOps Grafana Dashboard](screenshots/01-grafana-dashboard.png)
+
+### Prometheus Metrics
+
+![SentinelOps Prometheus Metrics](screenshots/02-prometheus.png)
+
+### Security Detection Tests
+
+![SentinelOps Security Detection Tests](screenshots/03-security-tests.png)
+
+### SMTP Test Alert
+
+![SentinelOps TEST_ALERT Email](screenshots/04-test-alert-email.png)
+
+### Real Security Alert
+
+![SentinelOps SUSPICIOUS_LOGIN Email](screenshots/05-suspicious-login-email.png)
+
 ## Security Monitoring
 
 SentinelOps monitors authentication logs for failed login attempts.
