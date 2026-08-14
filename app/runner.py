@@ -46,7 +46,7 @@ def run_security_checks():
 
             try:
                 if send_email_alert(alert):
-                    record_email_alert()
+                    record_email_alert(alert)
             except Exception as exc:
                 print(f"[ERROR] Failed to send email alert: {exc}")
     else:
@@ -77,7 +77,7 @@ def run_monitoring_checks():
 
             try:
                 if send_email_alert(event):
-                    record_email_alert()
+                    record_email_alert(alert)
             except Exception as exc:
                 print(f"[ERROR] Failed to send email alert: {exc}")
 

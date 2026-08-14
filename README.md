@@ -415,7 +415,9 @@ sentinelops_email_alerts_total
 
 ## Test Email Alerting
 
-The test script generates a synthetic `TEST_ALERT`.
+### SMTP connectivity test
+
+The `test.py` script sends a synthetic test alert to verify Gmail SMTP configuration.
 
 Run:
 
@@ -431,20 +433,33 @@ Expected output:
 [SUCCESS] Test email sent successfully.
 ```
 
-This test does **not** represent a real failed-login event.
+This test does not simulate a real security event.
 
-Actual security emails are generated automatically when SentinelOps detects suspicious activity.
+### Suspicious-login detection test
 
-Example real alert:
+The `test2.py` script simulates five failed login attempts from the same source IP within the configured detection window.
+
+Run:
+
+```bash
+python test2.py
+```
+
+Expected output:
 
 ```text
-Event Type: SUSPICIOUS_LOGIN
-Severity: CRITICAL
-Source IP: 192.168.1.50
-
-Message:
-5 failed login attempts from 192.168.1.50 within 60 seconds
+[INFO] Simulating 5 failed login attempts...
+[INFO] Source IP: 192.168.1.50
+[INFO] Parsed 5 failed login events
+[ALERT] CRITICAL - SUSPICIOUS_LOGIN - 5 failed login attempts from 192.168.1.50 within 60 seconds
+[ALERT] Email sent to 3 recipient(s): SUSPICIOUS_LOGIN (CRITICAL)
+[SUCCESS] Security alert email sent successfully.
+[SUCCESS] Suspicious-login test completed.
 ```
+
+This test exercises the actual SentinelOps suspicious-login detection, SQLite event storage, email alerting, and Prometheus security metrics without modifying the system authentication log.
+
+Actual production security alerts are generated automatically by `sentinelops.service`.
 
 ## Security Monitoring
 

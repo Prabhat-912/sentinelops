@@ -28,9 +28,20 @@ def initialize_database():
         )
     """)
 
-    # Store detected events/alerts
+    # Store detected security events/alerts
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS events (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp TEXT NOT NULL,
+            event_type TEXT NOT NULL,
+            severity TEXT NOT NULL,
+            message TEXT NOT NULL
+        )
+    """)
+
+    # Store successfully sent email alerts
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS email_alerts (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             timestamp TEXT NOT NULL,
             event_type TEXT NOT NULL,

@@ -25,7 +25,7 @@ security_alerts = Counter(
 
 email_alerts = Counter(
     "sentinelops_email_alerts_total",
-    "Total number of email alerts sent by SentinelOps",
+    "Total number of SentinelOps email alerts sent",
 )
 
 
@@ -46,13 +46,18 @@ def update_metrics_from_database():
         memory_usage.set(row[1])
         disk_usage.set(row[2])
 
-    alert_count = connection.execute(
+    security_alert_count = connection.execute(
         "SELECT COUNT(*) FROM events"
+    ).fetchone()[0]
+
+    email_alert_count = connection.execute(
+        "SELECT COUNT(*) FROM email_alerts"
     ).fetchone()[0]
 
     connection.close()
 
-    security_alerts._value.set(alert_count)
+    security_alerts._value.set(security_alert_count)
+    email_alerts._value.set(email_alert_count)
 
 
 def update_system_metrics(metrics):
@@ -65,5 +70,32 @@ def record_security_alert():
     security_alerts.inc()
 
 
-def record_email_alert():
-    email_alerts.inc()
+def record_email_alert(alert):
+    connection = get_connection()
+
+    connection.execute(
+        """
+        INSERT INTO email_alerts (
+            timestamp,
+            event_type,
+            severity,
+            message
+        )
+        VALUES (datetime('now'), ?, ?, ?)
+        """,
+        (
+            alert["event_type"],
+            alert["severity"],
+            alert["message"],
+        ),
+    )
+
+    connection.commit()
+
+    email_alert_count = connection.execute(
+        "SELECT COUNT(*) FROM email_alerts"
+    ).fetchone()[0]
+
+    connection.close()
+
+    email_alerts._value.set(email_alert_count)
